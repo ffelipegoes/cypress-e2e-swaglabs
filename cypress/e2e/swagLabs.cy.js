@@ -1,14 +1,31 @@
 ///<reference types="cypress"/>
 
-describe('Testes no Sauce Demo', () => {
+describe("Successfully tests", () => {
+  beforeEach(() => {
+    cy.accessSignupPage();
+    cy.login();
+  });
 
-  beforeEach(()=>{
-    cy.accessSignupPage()
-  })
+  it("CheckoutFlow", () => {
+    cy.AddToCart();
+    cy.Checkout();
+  });
+  it("RemovingProducts", () => {
+    cy.AddToCart();
+    cy.RemovingProducts();
+  });
 
-  it('passes', () => {
+  it("RemovingProductsOnCart", () => {
+    cy.AddToCart();
+    cy.RemovingProductsOnCart();
+  });
+});
 
-    cy.login()
-  })
-
-})
+describe("Invalid login", () => {
+  beforeEach(() => {
+    cy.accessSignupPage();
+  });
+  it("loginFail", () => {
+    cy.loginFail();
+  });
+});

@@ -24,14 +24,78 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-    Cypress.Commands.add('accessSignupPage',()=>{
-      cy.visit('https://www.saucedemo.com/')
-      cy.get('.login_logo').should('have.text','Swag Labs')
-    })
+import { faker, fakerPT_BR } from "@faker-js/faker";
+const firstName = faker.person.firstName();
+const lastName = faker.person.lastName();
+const cep = faker.location.zipCode();
 
-     Cypress.Commands.add('login',()=>{
-      cy.get('input[placeholder="Username"').type("standard_user")
-      cy.get('input[placeholder="Password"').type("secret_sauce")
-      cy.get('.submit-button').click()
+Cypress.Commands.add("accessSignupPage", () => {
+  cy.visit("https://www.saucedemo.com/");
+  cy.get(".login_logo").should("have.text", "Swag Labs");
+});
 
-    })
+Cypress.Commands.add("login", () => {
+  cy.get('input[placeholder="Username"').type("standard_user");
+  cy.get('input[placeholder="Password"').type("secret_sauce");
+  cy.get(".submit-button").click();
+  cy.get(".title").should("have.text", "Products");
+});
+
+Cypress.Commands.add("loginFail", () => {
+  cy.get('input[placeholder="Username"').type("standard_user");
+  cy.get('input[placeholder="Password"').type("wrongPassword");
+  cy.get(".submit-button").click();
+  cy.get('[data-test="error"]').should(
+    "have.text",
+    "Epic sadface: Username and password do not match any user in this service",
+  );
+});
+
+Cypress.Commands.add("AddToCart", () => {
+  cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').click();
+  cy.get('[data-test="add-to-cart-sauce-labs-bike-light"]').click();
+  cy.get('[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]').click();
+  cy.get('[data-test="add-to-cart-sauce-labs-fleece-jacket"]').click();
+  cy.get('[data-test="add-to-cart-sauce-labs-onesie"]').click();
+  cy.get('[data-test="add-to-cart-test.allthethings()-t-shirt-(red)"]').click();
+});
+
+Cypress.Commands.add("Checkout", () => {
+  cy.get('[data-test="shopping-cart-link"]').click();
+  cy.get('[data-test="title"]').should("have.text", "Your Cart");
+  cy.get('[data-test="checkout"]').click();
+  cy.get('[data-test="firstName"]').type(firstName);
+  cy.get('[data-test="lastName"]').type(lastName);
+  cy.get('[data-test="postalCode"]').type(cep);
+  cy.get('[data-test="continue"]').click();
+  cy.get('[data-test="title"]').should("have.text", "Checkout: Overview");
+  cy.get('[data-test="finish"]').click();
+  cy.get('[data-test="title"]').should("have.text", "Checkout: Complete!");
+  cy.get('[data-test="complete-header"]').should(
+    "have.text",
+    "Thank you for your order!",
+  );
+  cy.get('[data-test="back-to-products"]').click();
+});
+
+Cypress.Commands.add("RemovingProducts", () => {
+  cy.get('[data-test="remove-sauce-labs-backpack"]').click();
+  cy.get(".btn_primary").should("have.text", "Add to cart");
+});
+
+Cypress.Commands.add("RemovingProductsOnCart", () => {
+  cy.get('[data-test="remove-sauce-labs-backpack"]').click();
+  cy.get(".btn_primary").should("have.text", "Add to cart");
+  cy.get('[data-test="shopping-cart-link"]').click();
+  cy.get('[data-test="title"]').should("have.text", "Your Cart");
+  cy.get('[data-test="remove-sauce-labs-bolt-t-shirt"]').click();
+  cy.get('[data-test="remove-sauce-labs-fleece-jacket"]').click();
+  cy.get('[data-test="remove-sauce-labs-onesie"]').click();
+  cy.get('[data-test="remove-test.allthethings()-t-shirt-(red)"]').click();
+  cy.get('[data-test="remove-sauce-labs-bike-light"]').click();
+  cy.get('[data-test="continue-shopping"]').click();
+  cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').should(
+    "have.text",
+    "Add to cart",
+  );
+});
