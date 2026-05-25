@@ -21,3 +21,9 @@ Cypress.Commands.add("loginFail", () => {
     "Epic sadface: Username and password do not match any user in this service",
   );
 });
+
+Cypress.Commands.add("logout", () => {
+  cy.get("#react-burger-menu-btn").click();
+  cy.get('[data-test="logout-sidebar-link"]').click();
+  cy.get(".login_logo").should("have.text", "Swag Labs");
+});

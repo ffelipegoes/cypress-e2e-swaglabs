@@ -1,11 +1,11 @@
 ///<reference types="cypress"/>
-describe("CheckoutFlow", () => {
+describe("Successfully Logout", () => {
   beforeEach(() => {
     cy.accessSignupPage();
     cy.login();
   });
-  it("CheckoutSuccessFlow", () => {
-    cy.AddToCart();
-    cy.Checkout();
+
+  it("Logout", () => {
+    cy.logout();
   });
 });
